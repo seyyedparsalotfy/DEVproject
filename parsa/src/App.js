@@ -1,8 +1,8 @@
 import logo from "./logo.svg";
-import "./App.css";
 
-const data = {
-  trip_financials: [
+const TripData = () => {
+  // Sample trip_financials and payments data
+  const trip_financials = [
     {
       id: 2867462,
       request_datetime: "2022-04-20T17:08:36.465861+04:30",
@@ -26,19 +26,9 @@ const data = {
         title: "شیراز",
       },
     },
-    {
-      id: 2867467,
-      request_datetime: "2022-04-21T09:30:00.000000+04:30",
-      driver: "راننده تست ۳",
-      final_price: 50000,
-      source_title: "تست میاره ۳",
-      hub: {
-        id: 3115,
-        title: "تهران",
-      },
-    },
-  ],
-  payments: [
+  ];
+
+  const payments = [
     {
       id: 199069,
       datetime: "2022-04-20T14:57:09.959629+04:30",
@@ -46,94 +36,44 @@ const data = {
       description: null,
     },
     {
-      id: 199071,
-      datetime: "2022-04-20T16:30:00.000000+04:30",
-      amount: -50000,
+      id: 199070,
+      datetime: "2022-04-18T16:58:47.678934+04:30",
+      amount: -7140000,
       description: null,
     },
-    {
-      id: 199073,
-      datetime: "2022-04-21T10:00:00.000000+04:30",
-      amount: -20000,
-      description: null,
-    },
-  ],
-};
+  ];
 
-const arrangeDataByDay = (data) => {
-  const combinedData = [...data.trip_financials, ...data.payments];
+  // Combine trip_financials and payments into a single array
+  const allData = [...trip_financials, ...payments];
 
-  const sortedData = combinedData.sort((a, b) => {
-    return (
-      new Date(a.datetime || a.request_datetime) -
-      new Date(b.datetime || b.request_datetime)
-    );
-  });
-
-  const groupedData = sortedData.reduce((acc, item) => {
-    const date = new Date(
-      item.datetime || item.request_datetime,
-    ).toLocaleDateString();
-    if (!acc[date]) {
-      acc[date] = [];
-    }
-    acc[date].push(item);
-    return acc;
-  }, {});
-
-  return groupedData;
-};
-
-const App = () => {
-  const groupedData = arrangeDataByDay(data);
+  // Sort allData by datetime in ascending order
+  allData.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
 
   return (
     <div>
-      <h1>Arranged Data:</h1>
-      {Object.entries(groupedData).map(([date, presentations]) => (
-        <div key={date}>
-          <h2>{date}</h2>
-          {presentations.map((item) => (
-            <div key={item.id}>
-              <p>
-                <strong>ID: </strong>
-                {item.id}
-              </p>
-              {item.driver && (
-                <>
-                  <p>
-                    <strong>Driver: </strong>
-                    {item.driver}
-                  </p>
-                  <p>
-                    <strong>Final Price: </strong>
-                    {item.final_price}
-                  </p>
-                </>
-              )}
-              {item.amount && (
-                <p>
-                  <strong>Amount: </strong>
-                  {item.amount}
-                </p>
-              )}
-              {item.source_title && (
-                <p>
-                  <strong>Source Title: </strong>
-                  {item.source_title}
-                </p>
-              )}
-              {item.hub && (
-                <p>
-                  <strong>Hub ID: </strong>
-                  {item.hub.id}
-                </p>
-              )}
-            </div>
-          ))}
+      {allData.map((data) => (
+        <div key={data.id}>
+          {data.request_datetime && (
+            <>
+              <p>Request Datetime: {data.request_datetime}</p>
+              <p>Driver: {data.driver}</p>
+              <p>Final Price: {data.final_price}</p>
+              <p>Source Title: {data.source_title}</p>
+              <p>Hub Title: {data.hub.title}</p>
+            </>
+          )}
+          {data.datetime && (
+            <>
+              <p>Payment Datetime: {data.datetime}</p>
+              <p>Amount: {data.amount}</p>
+              <p>Description: {data.description}</p>
+            </>
+          )}
+          <hr />
         </div>
       ))}
     </div>
   );
 };
-export default App;
+
+export default TripData;
