@@ -2,7 +2,6 @@ import logo from "./logo.svg";
 import React, { useState } from "react";
 
 const ExampleComponent = () => {
-  // Your data
   const data = {
     trip_financials: [
       {
@@ -45,10 +44,8 @@ const ExampleComponent = () => {
     ],
   };
 
-  // Combining trip_financials and payments arrays
   const combinedData = [...data.trip_financials, ...data.payments];
 
-  // Create a map to group the data by date
   const groupedData = combinedData.reduce((acc, item) => {
     const date = new Date(item.datetime).toLocaleDateString();
     if (!acc[date]) {
@@ -58,15 +55,12 @@ const ExampleComponent = () => {
     return acc;
   }, {});
 
-  // Sort the groupedData keys (dates) in descending order
   const sortedDates = Object.keys(groupedData).sort(
     (a, b) => new Date(b).getTime() - new Date(a).getTime(),
   );
 
-  // State for filtering
   const [filterType, setFilterType] = useState("");
 
-  // Function to filter the data based on the filterType
   const filteredData = (filterType) => {
     if (filterType === "payment") {
       return combinedData.filter((item) => item.trip_id === undefined);
@@ -77,7 +71,6 @@ const ExampleComponent = () => {
     }
   };
 
-  // Render the sorted and filtered data
   return (
     <div>
       <div>
