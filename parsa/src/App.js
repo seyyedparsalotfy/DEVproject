@@ -1,23 +1,80 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+const data = {
+  trip_financials: [
+    {
+      id: 2867462,
+      request_datetime: "2022-04-20T17:08:36.465861+04:30",
+      driver: "راننده تست",
+      final_price: 40000,
+      source_title: "تست میاره",
+      hub: {
+        id: 3115,
+        title: "تهران",
+      },
+    },
+    {
+      id: 2867459,
+      trip_id: 3207732,
+      request_datetime: "2022-04-20T14:54:00.569765+04:30",
+      driver: "راننده خورسند",
+      final_price: 33000,
+      source_title: "تست میاره ۲",
+      hub: {
+        id: 3115,
+        title: "شیراز",
+      },
+    },
+  ],
+  payments: [
+    {
+      id: 199069,
+      datetime: "2022-04-20T14:57:09.959629+04:30",
+      amount: -100000,
+      description: null,
+    },
+    {
+      id: 199070,
+      datetime: "2022-04-18T16:58:47.678934+04:30",
+      amount: -7140000,
+      description: null,
+    },
+  ],
+};
+
+const sortedTripFinancials = data.trip_financials.sort((a, b) => {
+  const dateA = new Date(a.request_datetime);
+  const dateB = new Date(b.request_datetime);
+  return dateB - dateA;
+});
+
+const sortedPayments = data.payments.sort((a, b) => {
+  const dateA = new Date(a.datetime);
+  const dateB = new Date(b.datetime);
+  return dateB - dateA;
+});
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h2>Trips</h2>
+      {sortedTripFinancials.map((trip) => (
+        <div key={trip.id}>
+          <h3>{trip.source_title}</h3>
+          <p>Driver: {trip.driver}</p>
+          <p>Price: {trip.final_price}</p>
+          <p>Date: {trip.request_datetime}</p>
+          <p>Hub: {trip.hub.title}</p>
+        </div>
+      ))}
+
+      <h2>Payments</h2>
+      {sortedPayments.map((payment) => (
+        <div key={payment.id}>
+          <p>Amount: {payment.amount}</p>
+          <p>Date: {payment.datetime}</p>
+        </div>
+      ))}
     </div>
   );
 }
