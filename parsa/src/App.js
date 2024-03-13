@@ -61,10 +61,8 @@ const data = {
 };
 
 const arrangeDataByDay = (data) => {
-  // Combine both trip_financials and payments into a single array
   const combinedData = [...data.trip_financials, ...data.payments];
 
-  // Sort the combinedData array based on the datetime property in ascending order
   const sortedData = combinedData.sort((a, b) => {
     return (
       new Date(a.datetime || a.request_datetime) -
@@ -72,7 +70,6 @@ const arrangeDataByDay = (data) => {
     );
   });
 
-  // Group the sortedData by day and convert it into an object
   const groupedData = sortedData.reduce((acc, item) => {
     const date = new Date(
       item.datetime || item.request_datetime,
