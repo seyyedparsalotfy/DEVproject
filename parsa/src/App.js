@@ -1,5 +1,6 @@
 import logo from "./logo.svg";
 import "./App.css";
+
 const data = {
   trip_financials: [
     {
@@ -25,6 +26,17 @@ const data = {
         title: "شیراز",
       },
     },
+    {
+      id: 2867467,
+      request_datetime: "2022-04-21T09:30:00.000000+04:30",
+      driver: "راننده تست ۳",
+      final_price: 50000,
+      source_title: "تست میاره ۳",
+      hub: {
+        id: 3115,
+        title: "تهران",
+      },
+    },
   ],
   payments: [
     {
@@ -34,49 +46,97 @@ const data = {
       description: null,
     },
     {
-      id: 199070,
-      datetime: "2022-04-18T16:58:47.678934+04:30",
-      amount: -7140000,
+      id: 199071,
+      datetime: "2022-04-20T16:30:00.000000+04:30",
+      amount: -50000,
+      description: null,
+    },
+    {
+      id: 199073,
+      datetime: "2022-04-21T10:00:00.000000+04:30",
+      amount: -20000,
       description: null,
     },
   ],
 };
 
-const sortedTripFinancials = data.trip_financials.sort((a, b) => {
-  const dateA = new Date(a.request_datetime);
-  const dateB = new Date(b.request_datetime);
-  return dateB - dateA;
-});
+const arrangeDataByDay = (data) => {
+  // Combine both trip_financials and payments into a single array
+  const combinedData = [...data.trip_financials, ...data.payments];
 
-const sortedPayments = data.payments.sort((a, b) => {
-  const dateA = new Date(a.datetime);
-  const dateB = new Date(b.datetime);
-  return dateB - dateA;
-});
+  // Sort the combinedData array based on the datetime property in ascending order
+  const sortedData = combinedData.sort((a, b) => {
+    return (
+      new Date(a.datetime || a.request_datetime) -
+      new Date(b.datetime || b.request_datetime)
+    );
+  });
 
-function App() {
+  // Group the sortedData by day and convert it into an object
+  const groupedData = sortedData.reduce((acc, item) => {
+    const date = new Date(
+      item.datetime || item.request_datetime,
+    ).toLocaleDateString();
+    if (!acc[date]) {
+      acc[date] = [];
+    }
+    acc[date].push(item);
+    return acc;
+  }, {});
+
+  return groupedData;
+};
+
+const App = () => {
+  const groupedData = arrangeDataByDay(data);
+
   return (
     <div>
-      <h2>Trips</h2>
-      {sortedTripFinancials.map((trip) => (
-        <div key={trip.id}>
-          <h3>{trip.source_title}</h3>
-          <p>Driver: {trip.driver}</p>
-          <p>Price: {trip.final_price}</p>
-          <p>Date: {trip.request_datetime}</p>
-          <p>Hub: {trip.hub.title}</p>
-        </div>
-      ))}
-
-      <h2>Payments</h2>
-      {sortedPayments.map((payment) => (
-        <div key={payment.id}>
-          <p>Amount: {payment.amount}</p>
-          <p>Date: {payment.datetime}</p>
+      <h1>Arranged Data:</h1>
+      {Object.entries(groupedData).map(([date, presentations]) => (
+        <div key={date}>
+          <h2>{date}</h2>
+          {presentations.map((item) => (
+            <div key={item.id}>
+              <p>
+                <strong>ID: </strong>
+                {item.id}
+              </p>
+              {item.driver && (
+                <>
+                  <p>
+                    <strong>Driver: </strong>
+                    {item.driver}
+                  </p>
+                  <p>
+                    <strong>Final Price: </strong>
+                    {item.final_price}
+                  </p>
+                </>
+              )}
+              {item.amount && (
+                <p>
+                  <strong>Amount: </strong>
+                  {item.amount}
+                </p>
+              )}
+              {item.source_title && (
+                <p>
+                  <strong>Source Title: </strong>
+                  {item.source_title}
+                </p>
+              )}
+              {item.hub && (
+                <p>
+                  <strong>Hub ID: </strong>
+                  {item.hub.id}
+                </p>
+              )}
+            </div>
+          ))}
         </div>
       ))}
     </div>
   );
-}
-
+};
 export default App;
