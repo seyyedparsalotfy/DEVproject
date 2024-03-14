@@ -1,6 +1,6 @@
 import logo from "./logo.svg";
 import React, { useState } from "react";
-
+// فانکشن دیتا هامون
 const ExampleComponent = () => {
   const data = {
     trip_financials: [
@@ -43,7 +43,7 @@ const ExampleComponent = () => {
       },
     ],
   };
-
+// دو تا آرایه هامون رو که یکی برای سفر ها بود و یکی هم برای پرداختی ها ،با عملگر اسپریت هر دو رو باهم ادغام کردیم و آزایه ترکیب داده ها (کمبایند داتا )بر اساس ویژگی تایم 
   const combinedData = [...data.trip_financials, ...data.payments];
 
   const groupedData = combinedData.reduce((acc, item) => {
