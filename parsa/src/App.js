@@ -1,4 +1,3 @@
-import logo from "./logo.svg";
 import React, { useState } from "react";
 // فانکشن دیتا هامون
 const ExampleComponent = () => {
@@ -43,8 +42,13 @@ const ExampleComponent = () => {
       },
     ],
   };
-// دو تا آرایه هامون رو که یکی برای سفر ها بود و یکی هم برای پرداختی ها ،با عملگر اسپریت هر دو رو باهم ادغام کردیم و آزایه ترکیب داده ها (کمبایند داتا )بر اساس ویژگی تایم 
+  // دو تا آرایه هامون رو که یکی برای سفر ها بود و یکی هم برای پرداختی ها ،با عملگر اسپریت هر دو رو باهم ادغام کردیم و آزایه ترکیب داده ها (کمبایند داتا )بر اساس ویژگی تایم (دیت تایم)به ترتیب نزولی مرتب کردیم
+
+  //در دستور بازگشت داده های مرتب شده با استفاده از متد (مپ)حلقه ای درست کردیم و جزییات هر ایتم روی صفحه نمایش دادیم ،خروجی شامل داده های پرداختی وسفر ها که براساس تاریخ از جدید به قدیم مرتب شده اند
+
   const combinedData = [...data.trip_financials, ...data.payments];
+
+  //متغیر گروپ دیتا رو اضافه کردم کخ حاصلش گروه بندیه داده های ترکیبی براساس تاریخه و از روس ریدیوس استفاده کردم
 
   const groupedData = combinedData.reduce((acc, item) => {
     const date = new Date(item.datetime).toLocaleDateString();
@@ -55,12 +59,13 @@ const ExampleComponent = () => {
     return acc;
   }, {});
 
+  //متغیر سورت داتا که نوشتم کلید های مرتب شده ی  گروپ دیتا  رو نگه میداره و از جدید به غدیم مرتب میکنه
   const sortedDates = Object.keys(groupedData).sort(
     (a, b) => new Date(b).getTime() - new Date(a).getTime(),
   );
-
+  //
   const [filterType, setFilterType] = useState("");
-
+  // فانکشن فیلتر داتاو فیلتر کردن داده ها  بر اساس فیلتر تایپ
   const filteredData = (filterType) => {
     if (filterType === "payment") {
       return combinedData.filter((item) => item.trip_id === undefined);
@@ -70,7 +75,7 @@ const ExampleComponent = () => {
       return combinedData;
     }
   };
-
+  // در مرحله اخر هم که داده هایی که مرتب کردیم رو رندر و فیلتر میکینم
   return (
     <div>
       <div>
